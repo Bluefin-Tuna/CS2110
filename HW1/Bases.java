@@ -62,9 +62,11 @@ public class Bases
      */
     public static int decimalStringToInt(String decimal)
     {
+        int t = 1;
         int ans = 0;
-        for(int i = 0; i < decimal.length(); i++) {
-            ans += (decimal.charAt(i) - '0') * Math.pow(10, decimal.length() - i - 1);
+        for(int i = decimal.length() - 1; i >= 0; i--) {
+            ans += (decimal.charAt(i) - '0') * t;
+            t *= 10;
         }
         return ans;
     }

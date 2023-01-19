@@ -2,32 +2,19 @@ Operations.java:
 	getShort: 5.0/5.0
 	setByte: 5.0/5.0
 	pack: 5.0/5.0
-	bitRange: 0.0/5.0
-		[fail] Failed test case for method bitRange. Arguments [4552329, 8, 8]; Expected return value: 118; Actual: 4552192
-		[fail] Failed test case for method bitRange. Arguments [22161, 0, 8]; Expected return value: 145; Actual: 1
-		[fail] Failed test case for method bitRange. Arguments [2147483647, 0, 31]; Expected return value: 2147483647; Actual: 30
-		[fail] Failed test case for method bitRange. Arguments [-858993460, 15, 9]; Expected return value: 409; Actual: -859013120
-		(-0.0) Violations:
-			Subtraction
+	bitRange: 5.0/5.0
 	xnor: 5.0/5.0
 	multipleOf2: 3.0/3.0
 	multipleOf8: 3.0/3.0
-	powerOf2: 0.0/4.0
-		[fail] Failed test case for method powerOf2. Arguments [596]; Expected return value: false; Actual: true
-		[fail] Failed test case for method powerOf2. Arguments [1456]; Expected return value: false; Actual: true
-		[fail] Failed test case for method powerOf2. Arguments [-2147483648]; Expected return value: false; Actual: true
-		[fail] Failed test case for method powerOf2. Arguments [0]; Expected return value: false; Actual: true
-		[fail] Failed test case for method powerOf2. Arguments [305415969]; Expected return value: false; Actual: true
-		(-1.5) Violations:
-			Method not implemented
+	powerOf2: 4.0/4.0
+	Perfect!
 Bases.java: 
 	binaryStringToInt: 5.0/5.0
-	decimalStringToInt: 0.0/5.0
-		(-5.0) Violations:
-			Disallowed method invocation
+	decimalStringToInt: 5.0/5.0
 	hexStringToInt: 5.0/5.0
 	intToOctalString: 5.0/5.0
 	binaryStringToHexString: 5.0/5.0
+	Perfect!
 BitVector.java: 
 	set: 5.0/5.0
 	clear: 5.0/5.0
@@ -38,4 +25,4 @@ BitVector.java:
 	zerosCount: 5.0/5.0
 	size: 5.0/5.0
 	Perfect!
-Final Grade: 86.0/100.0
+Final Grade: 100.0/100.0

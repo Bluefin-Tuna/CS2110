@@ -149,7 +149,7 @@ public class Operations
      */
     int bitRange(int num, int s, int n)
     {
-        return num & ((n - s) << s);
+        return (num >> s) & ~(~0 << n);
     }
 
     /**
@@ -232,6 +232,6 @@ public class Operations
 
     boolean powerOf2(int num)
     {
-        return true;
+        return (num > 0) && ((num & (num - 1)) == 0);
     }
 }
