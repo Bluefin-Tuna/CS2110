@@ -85,8 +85,8 @@ public class Bases
         for(int i = 0; i < hex.length(); i++) {
             char c = hex.charAt(i);
             ans += c - '9' > 0 ?
-                (c - '9' + 2) << ((hex.length() - i - 1) << 2):
-                (c - '0') << ((hex.length() - i - 1) << 2);
+                  (c - '9' + 2) << ((hex.length() - i - 1) << 2):
+                  (c - '0') << ((hex.length() - i - 1) << 2);
         }
         return ans;
     }
