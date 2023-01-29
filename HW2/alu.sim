@@ -1,0 +1,317 @@
+{
+  "version": "1.9.0 2110 version",
+  "globalBitSize": 1,
+  "clockSpeed": 1,
+  "circuits": [
+    {
+      "name": "1-Bit Adder",
+      "components": [
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.wiring.PinPeer",
+          "x": 47,
+          "y": 8,
+          "properties": {
+            "Label location": "EAST",
+            "Label": "COUT",
+            "Is input?": "No",
+            "Direction": "WEST",
+            "Bitsize": "1"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.wiring.PinPeer",
+          "x": 13,
+          "y": 7,
+          "properties": {
+            "Label location": "WEST",
+            "Label": "A",
+            "Is input?": "Yes",
+            "Direction": "EAST",
+            "Bitsize": "1"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.wiring.PinPeer",
+          "x": 13,
+          "y": 11,
+          "properties": {
+            "Label location": "WEST",
+            "Label": "B",
+            "Is input?": "Yes",
+            "Direction": "EAST",
+            "Bitsize": "1"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.wiring.PinPeer",
+          "x": 13,
+          "y": 15,
+          "properties": {
+            "Label location": "WEST",
+            "Label": "CIN",
+            "Is input?": "Yes",
+            "Direction": "EAST",
+            "Bitsize": "1"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.wiring.PinPeer",
+          "x": 47,
+          "y": 14,
+          "properties": {
+            "Label location": "EAST",
+            "Label": "SUM",
+            "Is input?": "No",
+            "Direction": "WEST",
+            "Bitsize": "1"
+          }
+        }
+      ],
+      "wires": []
+    },
+    {
+      "name": "8-Bit Adder",
+      "components": [
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.wiring.PinPeer",
+          "x": 59,
+          "y": 21,
+          "properties": {
+            "Label location": "EAST",
+            "Label": "COUT",
+            "Is input?": "No",
+            "Direction": "WEST",
+            "Bitsize": "1"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.wiring.PinPeer",
+          "x": 2,
+          "y": 15,
+          "properties": {
+            "Label location": "WEST",
+            "Label": "A",
+            "Is input?": "Yes",
+            "Direction": "EAST",
+            "Bitsize": "8"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.wiring.PinPeer",
+          "x": 2,
+          "y": 31,
+          "properties": {
+            "Label location": "WEST",
+            "Label": "B",
+            "Is input?": "Yes",
+            "Direction": "EAST",
+            "Bitsize": "8"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.wiring.PinPeer",
+          "x": 8,
+          "y": 21,
+          "properties": {
+            "Label location": "WEST",
+            "Label": "CIN",
+            "Is input?": "Yes",
+            "Direction": "EAST",
+            "Bitsize": "1"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.wiring.PinPeer",
+          "x": 59,
+          "y": 17,
+          "properties": {
+            "Label location": "EAST",
+            "Label": "SUM",
+            "Is input?": "No",
+            "Direction": "WEST",
+            "Bitsize": "8"
+          }
+        }
+      ],
+      "wires": []
+    },
+    {
+      "name": "Basic 8-Bit ALU",
+      "components": [
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.wiring.PinPeer",
+          "x": 18,
+          "y": 18,
+          "properties": {
+            "Label location": "SOUTH",
+            "Label": "func",
+            "Is input?": "Yes",
+            "Direction": "NORTH",
+            "Bitsize": "2"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.wiring.PinPeer",
+          "x": 9,
+          "y": 6,
+          "properties": {
+            "Label location": "WEST",
+            "Label": "A",
+            "Is input?": "Yes",
+            "Direction": "EAST",
+            "Bitsize": "8"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.wiring.PinPeer",
+          "x": 9,
+          "y": 11,
+          "properties": {
+            "Label location": "WEST",
+            "Label": "B",
+            "Is input?": "Yes",
+            "Direction": "EAST",
+            "Bitsize": "8"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.wiring.PinPeer",
+          "x": 38,
+          "y": 6,
+          "properties": {
+            "Label location": "EAST",
+            "Label": "OUT",
+            "Is input?": "No",
+            "Direction": "WEST",
+            "Bitsize": "8"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.misc.Text",
+          "x": 68,
+          "y": 4,
+          "properties": {
+            "Text": "00: A PLUS B"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.misc.Text",
+          "x": 68,
+          "y": 10,
+          "properties": {
+            "Text": "11: PASS A"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.misc.Text",
+          "x": 68,
+          "y": 6,
+          "properties": {
+            "Text": "01: A AND B"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.misc.Text",
+          "x": 68,
+          "y": 8,
+          "properties": {
+            "Text": "10: NOT A"
+          }
+        }
+      ],
+      "wires": []
+    },
+    {
+      "name": "Intermediate 8-Bit ALU",
+      "components": [
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.misc.Text",
+          "x": 68,
+          "y": 6,
+          "properties": {
+            "Text": "01: isDivisibleBy16"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.misc.Text",
+          "x": 68,
+          "y": 8,
+          "properties": {
+            "Text": "10: multiplyBy9"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.wiring.PinPeer",
+          "x": 18,
+          "y": 18,
+          "properties": {
+            "Label location": "SOUTH",
+            "Label": "OP",
+            "Is input?": "Yes",
+            "Direction": "NORTH",
+            "Bitsize": "2"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.wiring.PinPeer",
+          "x": 9,
+          "y": 6,
+          "properties": {
+            "Label location": "WEST",
+            "Label": "A",
+            "Is input?": "Yes",
+            "Direction": "EAST",
+            "Bitsize": "8"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.wiring.PinPeer",
+          "x": 9,
+          "y": 11,
+          "properties": {
+            "Label location": "WEST",
+            "Label": "B",
+            "Is input?": "Yes",
+            "Direction": "EAST",
+            "Bitsize": "8"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.wiring.PinPeer",
+          "x": 38,
+          "y": 6,
+          "properties": {
+            "Label location": "EAST",
+            "Label": "OUT",
+            "Is input?": "No",
+            "Direction": "WEST",
+            "Bitsize": "8"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.misc.Text",
+          "x": 68,
+          "y": 10,
+          "properties": {
+            "Text": "11: minimum"
+          }
+        },
+        {
+          "name": "com.ra4king.circuitsim.gui.peers.misc.Text",
+          "x": 68,
+          "y": 4,
+          "properties": {
+            "Text": "00: isQuadruple"
+          }
+        }
+      ],
+      "wires": []
+    }
+  ],
+  "revisionSignatures": [
+    "CWU3OWMxOWFjMjk2NmQ2MDVmZWY4ZmY1M2RiYjU1Y2IzZWRlNTVmYTliMTM1OWYzYmNhYmMwOGI3MjI1MjFkYjIJMTY0MzEyNzM5NDE1NAkyMGU2Mzc3ZWRkZWZiMDFkNWEyZjU0MzRjNGNhN2U5NTU3YTI5YzRjZmI0ZTRiOGE0NWJjMDZiMjA4Mzg2NDcx",
+    "ZTc5YzE5YWMyOTY2ZDYwNWZlZjhmZjUzZGJiNTVjYjNlZGU1NWZhOWIxMzU5ZjNiY2FiYzA4YjcyMjUyMWRiMgkwNDBiYmJiMzI5NGY4Njc3NDQ4ODNlZjY5OGIyNDZhNjQ4NTIxNWEwZDUzNTZiMzI5N2E5MzVlMGM4ZjRlNDI4CTE2NDMxNDQ3NDE2MzgJNjA4YTRkOGEyMjAwZjY0OGQ2YzMyMTljNWJiMjk3NTVkOTQ4MWYyOWM5NWY2OGI3OThmNWE3M2RhMDMyMDA5NQ\u003d\u003d",
+    "MDQwYmJiYjMyOTRmODY3NzQ0ODgzZWY2OThiMjQ2YTY0ODUyMTVhMGQ1MzU2YjMyOTdhOTM1ZTBjOGY0ZTQyOAlmMmVlZjIxZTI0YTI1MTc1YjcyMDE1OGVmNzJkNjJkZDYxZDM3NDc3ZTg0OGY2ZDY4OThlZjUyMTlkNDA5MjU2CTE2NzQwNjY0MzU2NzYJMzhmYThjMGY1NWQ1ZjQ5ZDFjN2U2MGI1MWM3OTIyMTU5MzlhZmRmN2E4NjdhNjdmN2Q1YmU1NTRhMGVlZDM5MQ\u003d\u003d",
+    "ZjJlZWYyMWUyNGEyNTE3NWI3MjAxNThlZjcyZDYyZGQ2MWQzNzQ3N2U4NDhmNmQ2ODk4ZWY1MjE5ZDQwOTI1Ngk1MTg0MjQ0ZWIyZDFjMGJiMjY2ZWE2YzZkYTMzYzI0MWM2N2UxYjE0YzBlYjhlMTU1NTkyOWEwZDAwMzUzNWQ1CTE2NzQwNjY1Mjc5NjMJMzhmYThjMGY1NWQ1ZjQ5ZDFjN2U2MGI1MWM3OTIyMTU5MzlhZmRmN2E4NjdhNjdmN2Q1YmU1NTRhMGVlZDM5MQ\u003d\u003d"
+  ]
+}
