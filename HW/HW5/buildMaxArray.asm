@@ -28,10 +28,10 @@
 
 LD R0, A ; a = A = 3200
 LD R1, B ; b = B = 3300
-ADD R1, R1, 2 ; b += 2 = 3302
 LD R2, C ; c = C = 3400
 LD R3, LENGTH ; l = LENGTH
 ADD R1, R1, R3 ; j
+ADD R1, R1, -1
 
 WHILE
 	
@@ -39,20 +39,27 @@ WHILE
 	
 	BRn END
 
-	LD R4, R0
-	LD R5, R1
+	LDR R4, R0, 0
+	LDR R5, R1, 0
 	
 	NOT R5, R5
 	ADD R5, R5, 1
 	ADD R4, R4, R5
 
 	BRn ELSE ; if s + t >= 0
-		ST 1, R2
+
+		AND R6, R6, 0
+		ADD R6, R6, 1
+
 	BR ENDIF
+	
 	ELSE
-		ST 0, R2
+
+		AND R6, R6, 0
+
 	ENDIF
 
+	STR R6, R2, 0
 	ADD R0, R0, 1
 	ADD R1, R1, -1
 	ADD R2, R2, 1

@@ -2,7 +2,7 @@
 ;; CS 2110 - Spring 2023
 ;; Homework 5 - octalStringToInt
 ;;=============================================================
-;; Name: 
+;; Name: Tanush Chopra
 ;;=============================================================
 
 ;;  Pseudocode (see PDF for explanation)
@@ -25,7 +25,48 @@
 ;;  mem[mem[RESULTADDR]] = value;
 
 .orig x3000
-    ;; YOUR CODE HERE
+
+LD R0, OCTALSTRING ; os = octalString
+LD R1, LENGTH      ; l = length
+LD R2, RESULTADDR  ; ds = ""
+AND R3, R3, 0      ; i = 0
+AND R4, R4, 0
+AND R5, R5, 0      ; v = 0
+LD R7, ASCII
+
+; l = -length
+NOT R1, R1
+ADD R1, R1, 1
+
+WHILE1
+
+    ADD R4, R3, R1
+
+    BRzp END ; if i < length
+
+    AND R4, R4, 0 ; leftShifts = 3
+    ADD R4, R4, 3
+
+    WHILE2
+
+        BRnz ENDWHILE2 ; if leftShifts > 0
+        ADD R5, R5, R5
+        ADD R4, R4, -1
+        BR WHILE2
+
+    ENDWHILE2
+
+    AND R6, R6, 0
+    ADD R6, R0, R3
+    LDR R6, R6, 0
+    ADD R6, R6, R7
+    ADD R5, R5, R6
+    ADD R3, R3, 1
+
+    BR WHILE1
+
+END
+    STI R5, RESULTADDR
     HALT
     
 ;; Do not change these values! 
