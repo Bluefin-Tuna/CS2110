@@ -2,7 +2,7 @@
 ;; CS 2110 - Spring 2023
 ;; Homework 5 - buildMaxArray
 ;;=============================================================
-;; Name: 
+;; Name: Tanush Chopra
 ;;=============================================================
 
 ;;  Pseudocode (see PDF for explanation)
@@ -26,26 +26,38 @@
 
 .orig x3000
 
-LD R0, A
-LD R1, B
-LD R2, C
-AND R4, R4, 0
-LD R3, LENGTH
-AND R7, R7, 0
+LD R0, A ; a = A = 3200
+LD R1, B ; b = B = 3300
+ADD R1, R1, 2 ; b += 2 = 3302
+LD R2, C ; c = C = 3400
+LD R3, LENGTH ; l = LENGTH
+ADD R1, R1, R3 ; j
 
 WHILE
-ADD R3, R3, -1
-BRnz END
-LDR R5, R0, R4
-LDR R6, R1, R3
-NOT R6, R6
-ADD R6, R6, 1
-ADD R5, R5, R6
-BRn ELSE
+	
+	ADD R3, R3, -1 ; l -= 1
+	
+	BRn END
 
-ELSE
-ADD R4, R4, 1
-BR WHILE
+	LD R4, R0
+	LD R5, R1
+	
+	NOT R5, R5
+	ADD R5, R5, 1
+	ADD R4, R4, R5
+
+	BRn ELSE ; if s + t >= 0
+		ST 1, R2
+	BR ENDIF
+	ELSE
+		ST 0, R2
+	ENDIF
+
+	ADD R0, R0, 1
+	ADD R1, R1, -1
+	ADD R2, R2, 1
+	
+	BR WHILE
 
 END
 	;; YOUR CODE HERE

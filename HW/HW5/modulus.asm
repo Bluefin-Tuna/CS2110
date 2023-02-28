@@ -25,10 +25,10 @@ LD R2, X
 
 WHILE
 
-ADD R2, R2, R1
-BRn END
-ADD R0, R0, R1
-BR WHILE
+    ADD R2, R2, R1
+    BRn END
+    ADD R0, R0, R1
+    BR WHILE
 
 END
     ST R0, ANSWER
