@@ -24,4 +24,9 @@
 *
 */
 
+struct position {
+    int r;
+    int c;
+};
+
 #endif

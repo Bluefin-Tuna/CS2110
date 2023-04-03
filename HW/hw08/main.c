@@ -7,6 +7,8 @@
 #include "images/csmajor.h"
 #include "images/shower.h"
 #include "images/start.h"
+#include "images/vscode.h"
+#include "images/end.h"
 
 enum gba_state {
   START,
@@ -40,10 +42,12 @@ int main(void) {
 
     switch (state) {
       case START:
-        drawImageDMA(0, 0, START_WIDTH, START_HEIGHT, start);
+        // drawImageDMA(0, 0, START_WIDTH, START_HEIGHT, start);
+        drawImageDMA(0, 0, VSCODE_WIDTH, VSCODE_HEIGHT, vscode);
+        // drawCenteredString()
         break;
       case PLAY:
-
+        
         // state = ?
         break;
       case WIN:
