@@ -7,6 +7,7 @@
 
 // You may add and remove includes as necessary to help facilitate your testing
 #include <stdio.h>
+#include "my_string.h"
 
 
 /** main
@@ -17,6 +18,11 @@
  * @return 0 on success
  */
 int main(void)
-{
+{  
+    // char str = "abbacbaabc";
+    // char c = 'a';
+    // char rstr = "main";
+    // replace_character_with_string(&str, &c, &rstr);
+    // printf(str);
     return 0;
 }

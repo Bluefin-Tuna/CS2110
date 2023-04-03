@@ -138,7 +138,6 @@ void *my_memset(void *str, int c, size_t n)
         *p = c;
         p++;
     }
-    // *p = '\0';
     return str;
 }
 
@@ -175,17 +174,25 @@ void remove_first_instance(char *str, char c){
  * @param replaceStr The pointer to the string we are replacing c with
  */
 void replace_character_with_string(char *str, char c, char *replaceStr) {
-    /* Note about UNUSED_PARAM
-    *
-    * UNUSED_PARAM is used to avoid compiler warnings and errors regarding unused function
-    * parameters prior to implementing the function. Once you begin implementing this
-    * function, you can delete the UNUSED_PARAM lines.
-    */
-    char* p = str;
-    while (*p && *p != c) { p++; }
-    if (*p == '\0') { return; }
-    remove_first_instance(str, c);
-    my_strncat(p, replaceStr, my_strlen(replaceStr));
+    if(my_strlen(replaceStr) == 0) {
+        remove_first_instance(str, c);
+        return;
+    }
+    size_t sl = my_strlen(str);
+    size_t n = my_strlen(replaceStr);
+    char* sp = str;
+    while (sp < (str + sl)) {
+        if (*sp == c) {
+            char* src = str + sl;
+            char* dest = str + sl + n - 1;
+            while (dest > sp) { *dest-- = *src--; }
+            int i = 0;
+            int nn = (int)(n);
+            while (i < nn) { *(sp + i++) = *replaceStr++; }
+            return;
+        }
+        sp++;
+    }
     return;
 }
 
