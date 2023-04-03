@@ -110,8 +110,9 @@ char *my_strncat(char *dest, const char *src, size_t n)
    size_t i = 0;
    while (i < n && *(src + i)) {
        *(p + i) = *(src + i);
+       i++;
    }
-   *(p + n) = '\0';
+   *(p + i) = '\0';
    return dest;
 }
 
@@ -161,6 +162,7 @@ void remove_first_instance(char *str, char c){
         *p = *(p + 1);
         p++;
     }
+    *(p) = '\0';
     return;
 }
 
@@ -179,10 +181,11 @@ void replace_character_with_string(char *str, char c, char *replaceStr) {
     * parameters prior to implementing the function. Once you begin implementing this
     * function, you can delete the UNUSED_PARAM lines.
     */
-    UNUSED_PARAM(str);
-    UNUSED_PARAM(c);
-    UNUSED_PARAM(replaceStr);
-
+    char* p = str;
+    while (*p && *p != c) { p++; }
+    if (*p == '\0') { return; }
+    remove_first_instance(str, c);
+    my_strncat(p, replaceStr, my_strlen(replaceStr));
     return;
 }
 
