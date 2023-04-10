@@ -1,11 +1,11 @@
 /*
  * Exported with nin10kit v1.8
- * Invocation command was nin10kit --mode=3 --resize=240x160 Start Start.png 
- * Time-stamp: Tuesday 04/06/2021, 01:34:52
+ * Invocation command was nin10kit --mode=3 --resize=240x160 start start.png 
+ * Time-stamp: Tuesday 04/04/2023, 03:32:55
  * 
  * Image Information
  * -----------------
- * Start.png 240@160
+ * start.png 240@160
  * 
  * All bug reports / feature requests are to be filed here https://github.com/TricksterGuy/nin10kit/issues
  */
@@ -13,7 +13,7 @@
 #ifndef START_H
 #define START_H
 
-extern const unsigned short Start[38400];
+extern const unsigned short start[38400];
 #define START_SIZE 76800
 #define START_LENGTH 38400
 #define START_WIDTH 240

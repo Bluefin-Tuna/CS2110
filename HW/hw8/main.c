@@ -4,14 +4,12 @@
 #include <stdlib.h>
 
 #include "gba.h"
-#include "images/End.h"
-#include "images/Start.h"
-#include "images/RAM.h"
-#include "images/PC.h"
+#include "images/csmajor.h"
+#include "images/shower.h"
+#include "images/start.h"
+#include "images/vscode.h"
+#include "images/end.h"
 
-/* TODO: */
-// Add any additional states you need for your app. You are not requried to use
-// these specific provided states.
 enum gba_state {
   START,
   PLAY,
@@ -19,9 +17,7 @@ enum gba_state {
 };
 
 int main(void) {
-  /* TODO: */
-  // Manipulate REG_DISPCNT here to set Mode 3. //
-
+  
   REG_DISPCNT = MODE3 | BG2_ENABLE;
 
   // Save current and previous state of button input.
@@ -31,122 +27,76 @@ int main(void) {
   // Load initial application state
   enum gba_state state = START;
 
-  struct position pcObj = {160 - PC_HEIGHT, 0};
-  const struct position ramObj = {(160 - RAM_HEIGHT) / 2, 240 - RAM_WIDTH};
+  struct position csm;
+  struct position vsc;
 
-  int time = 0;
-
+  int t = 0;
   char arr[20];
-
-  // char *s = "Score: ";
-  // char *num = time;
-
 
   while (1) {
     currentButtons = BUTTONS; // Load the current state of the buttons
-
-    /* TODO: */
-    // Manipulate the state machine below as needed //
-    // NOTE: Call waitFoVBlank() before you draw
-
     waitForVBlank();
-
-    
-    
-
     switch (state) {
       case START:
-        drawImageDMA(0, 0, 240, 160, Start);
-        //drawFullScreenImageDMA(Start);
+        drawFullScreenImageDMA(start);
         if (KEY_JUST_PRESSED(BUTTON_START, currentButtons, previousButtons)) {
           fillScreenDMA(BLACK);
           vBlankCounter = 0;
+          csm.r = randint(20, HEIGHT - CSMAJOR_HEIGHT);
+          csm.c = randint(20, WIDTH - CSMAJOR_WIDTH);
+          vsc.r = randint(20, HEIGHT - VSCODE_HEIGHT);
+          vsc.c = randint(20, WIDTH - VSCODE_WIDTH);
           state = PLAY;
         }
-        // state = ?
         break;
       case PLAY:
-
-        snprintf(arr, 20, "Score: %d", time);
-
-        drawString(0, 0, arr, BLACK);
-
-        time = vBlankCounter / 60;
-
-        snprintf(arr, 20, "Score: %d", time);
-
-        drawString(0, 0, arr, WHITE);
-
-        drawRectDMA(pcObj.col, pcObj.row, PC_WIDTH, PC_HEIGHT, BLACK);
-
-        if (KEY_DOWN(BUTTON_RIGHT, currentButtons)) {
-
-          pcObj.row++;
+        drawRectDMA(0, 0, WIDTH, 10, BLACK);
+        t = vBlankCounter / 60;
+        snprintf(arr, 20, "Time: %d", t);
+        drawString(3, 95, arr, WHITE);
+        drawRectDMA(csm.c, csm.r, CSMAJOR_WIDTH, CSMAJOR_HEIGHT, BLACK);
+        if (KEY_DOWN(BUTTON_RIGHT, currentButtons) && csm.r < WIDTH - CSMAJOR_WIDTH) {
+          csm.r++;
+        } else if (KEY_DOWN(BUTTON_LEFT, currentButtons) && csm.r > 0) {
+          csm.r--;
+        } else if (KEY_DOWN(BUTTON_UP, currentButtons) && csm.c > 15) {
+          csm.c--;
+        } else if (KEY_DOWN(BUTTON_DOWN, currentButtons) && csm.c < HEIGHT - CSMAJOR_HEIGHT) {
+          csm.c++;
         }
-        if (KEY_DOWN(BUTTON_LEFT, currentButtons)) {
-          if (pcObj.row > 0) {
-            pcObj.row--;
-          }
-        }
-        if (KEY_DOWN(BUTTON_UP, currentButtons)) {
-          if (pcObj.col > 0) {
-            pcObj.col--;
-          }
-        }
-        if (KEY_DOWN(BUTTON_DOWN, currentButtons)) {
-          if (pcObj.col < 160 - PC_HEIGHT) {
-            pcObj.col++;
-          }
-        }
-
         if (KEY_JUST_PRESSED(BUTTON_SELECT, currentButtons, previousButtons)) {
-          state = START;
-          pcObj.col = 160 - PC_HEIGHT;
-          pcObj.row = 0;
           vBlankCounter = 0;
+          state = START;
         }
-        if (pcObj.row + PC_WIDTH == ramObj.row) {
-          state = WIN;
+        if ((csm.r + CSMAJOR_HEIGHT >= vsc.r && csm.r <= vsc.r + VSCODE_HEIGHT) && (csm.c + CSMAJOR_WIDTH >= vsc.c && csm.c <= vsc.c + VSCODE_WIDTH)) {
+           state = WIN;
+           break;
         }
-
-        drawImageDMA(pcObj.col, pcObj.row, PC_WIDTH, PC_HEIGHT, PC);
-        drawRectDMA(0, 240 - RAM_WIDTH, RAM_WIDTH, 160, RED);
-        drawImageDMA(ramObj.col, ramObj.row, RAM_WIDTH, RAM_HEIGHT, RAM);
-        
-
-        // state = ?
+        /*if ((csm.r + VSCODE_WIDTH == vsc.r || csm.r - VSCODE_WIDTH == vsc.r) && (csm.c + CSMAJOR_HEIGHT == vsc.c || csm.c - VSCODE_HEIGHT == vsc.c)) {
+           state = WIN;
+        }*/
+        drawImageDMA(csm.c, csm.r, CSMAJOR_WIDTH, CSMAJOR_HEIGHT, csmajor);
+        drawImageDMA(vsc.c, vsc.r, VSCODE_WIDTH, VSCODE_HEIGHT, vscode);
         if (KEY_JUST_PRESSED(BUTTON_SELECT, currentButtons, previousButtons)) {
-          state = START;
-          pcObj.col = 160 - PC_HEIGHT;
-          pcObj.row = 0;
           vBlankCounter = 0;
+          state = START;
         }
         break;
       case WIN:
-        drawFullScreenImageDMA(End);
-
-        //char arr[20];
-
-        snprintf(arr, 20, "Score: %d", time);
-
-        drawString(100, 0, arr, BLACK);
-
-        // *num = time;
-        // drawString(0, 0, s, BLACK);
-        // drawString(0, 50, num, BLACK);
-
-        // state = ?
+        drawFullScreenImageDMA(end);
+        snprintf(arr, 20, "Time: %d", t);
+        drawString(0, 0, arr, WHITE);
         if (KEY_JUST_PRESSED(BUTTON_SELECT, currentButtons, previousButtons)) {
-          state = START;
-          pcObj.col = 160 - PC_HEIGHT;
-          pcObj.row = 0;
           vBlankCounter = 0;
+          state = START;
         }
         break;
     }
 
     previousButtons = currentButtons; // Store the current state of the buttons
   }
+
+  UNUSED(previousButtons); // You can remove this once previousButtons is used
 
   return 0;
 }

@@ -123,10 +123,10 @@ void waitForVBlank(void);
 #define UNUSED(param) ((void)((param)))
 
 /*
- * Generates a pseudo-random number between min and max, inclusive.
+ * Generates a pseudo-random number between min and max.
  *
- * @param  min bottom end of range.
- * @param  max top end of range.
+ * @param  min bottom end of range (inclusive).
+ * @param  max top end of range (exclusive).
  * @return random number in the given range.
  */
 int randint(int min, int max);
@@ -138,6 +138,7 @@ void setPixel(int row, int col, u16 color);
 void drawRectDMA(int row, int col, int width, int height, volatile u16 color);
 void drawFullScreenImageDMA(const u16 *image);
 void drawImageDMA(int row, int col, int width, int height, const u16 *image);
+void undrawImageDMA(int row, int col, int width, int height, const u16 *image);
 void fillScreenDMA(volatile u16 color);
 void drawChar(int row, int col, char ch, u16 color);
 void drawString(int row, int col, char *str, u16 color);

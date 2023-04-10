@@ -1,7 +1,7 @@
 ################################################################################
 # These are variables for the GBA toolchain build
 # You can add others if you wish to
-# Sahit Kavukuntla
+# ***** YOUR NAME HERE *****
 ################################################################################
 
 # TA-TODO: Put your application name here.
@@ -14,7 +14,7 @@ PROGNAME = App
 # that will be compiled into your program. For example
 # if you have main.c and myLib.c then in the following
 # line you would put main.o and myLib.o
-OFILES = main.o images/Start.o images/End.o images/RAM.o images/PC.o gba.o font.o 
+OFILES = gba.o font.o main.o images/csmajor.o images/shower.o images/start.o images/vscode.o images/end.o
 
 ################################################################################
 # These are various settings used to make the GBA toolchain work
@@ -32,8 +32,9 @@ include /opt/cs2110-tools/GBAVariables.mak
 LDFLAGS += --specs=nosys.specs
 
 # Adjust default compiler warnings and errors
-CFLAGS += -Wstrict-prototypes -Wold-style-definition
+CFLAGS += -Wstrict-prototypes -Wold-style-definition -Werror=vla
 
+.PHONY: debug
 debug: CFLAGS += $(CDEBUG) -I../shared
 debug: LDFLAGS += $(LDDEBUG)
 debug: $(PROGNAME).gba
@@ -46,22 +47,45 @@ $(PROGNAME).gba: $(PROGNAME).elf
 $(PROGNAME).elf: crt0.o $(GCCLIB)/crtbegin.o $(GCCLIB)/crtend.o $(GCCLIB)/crti.o $(GCCLIB)/crtn.o $(OFILES) libc_sbrk.o
 	$(CC) -o $(PROGNAME).elf $^ $(LDFLAGS)
 
-.PHONY: med
-med: CFLAGS += $(CRELEASE) -I../shared
-med: LDFLAGS += $(LDRELEASE)
-med: $(PROGNAME).gba
-	@echo "[EXECUTE] Running emulator Mednafen"
+.PHONY: release
+release: CFLAGS += $(CRELEASE) -I../shared
+release: LDFLAGS += $(LDRELEASE)
+release: $(PROGNAME).gba
+	@echo "Built $(PROGNAME).gba with release flags"
+
+.PHONY: mgba
+mgba: debug
+	@echo "[EXECUTE] Running emulator mGBA"
 	@echo "          Please see emulator.log if this fails"
-	@mkdir -p ~/.mednafen/
-	@cp mednafen-09x.cfg ~/.mednafen/
-	@mednafen $(MEDOPT) $(PROGNAME).gba >emulator.log 2>&1
+	@mgba-qt $(PROGNAME).gba
+
+.PHONY: gdb
+gdb: debug
+	@echo "[EXECUTE] Running Emulator MGBA with GDB"
+	@echo "          Please see emulator.log if this fails"
+	@mgba-qt $(PROGNAME).gba --gdb &
+	# To give mgba some time to initialize and start up the GDB server.
+	@sleep 0.5
+	@gdb-multiarch -ex 'file $(PROGNAME).elf' -ex 'target remote 127.0.0.1:2345'
 
 .PHONY: submit
 submit: clean
 	@rm -f submission.tar.gz
-	@tar czvf submission.tar.gz *
+	@tar --exclude="examples" -czvf submission.tar.gz *
+
+.PHONY: maze
+maze: 
+	@echo "[EXECUTE] Running emulator mGBA"
+	@echo "          Please see emulator.log if this fails"
+	@mgba-qt examples/maze/Maze.gba
+
+.PHONY: mario
+mario: 
+	@echo "[EXECUTE] Running emulator mGBA"
+	@echo "          Please see emulator.log if this fails"
+	@mgba-qt examples/mario/Mario.gba
 
 .PHONY: clean
 clean:
 	@echo "[CLEAN] Removing all compiled files"
-	rm -f *.o *.elf *.gba *.log */*.o
+	rm -f *.o *.elf *.gba *.log */*.o *.sav */*/*.sav
