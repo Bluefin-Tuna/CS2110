@@ -50,25 +50,20 @@ static User *create_user(char *name, UserType type, UserUnion data)
 {
     User * u = malloc(sizeof(struct user));
     if (!u) return NULL;
-    u->name = malloc(strlen(name) + 1);
-    if (!u->name) { free(u); return NULL; }
-    strcpy(u->name, name);
+    if (!name) u->name = NULL;
+    else {
+        u->name = malloc(strlen(name) + 1);
+        if (!u->name) { free(u); return NULL; }
+        strcpy(u->name, name);
+    }
     switch(type) {
-        case(STUDENT): ;
-            Student * s = malloc(sizeof(struct student));
-            if (!s) { free(u->name); free(u); return NULL; }
-            if (create_student(data.student.num_classes, data.student.grades, s)) { free(s); free(u->name); free(u); return NULL; }
+        case(STUDENT):;
+            if (create_student(data.student.num_classes, data.student.grades, &(u->data.student))) { free(u->name); free(u); return NULL; }
             u->type = type;
-            u->data.student = *s;
-            free(s->grades); free(s);
             break;
-        case(INSTRUCTOR): ;
-            Instructor * i = malloc(sizeof(struct instructor));
-            if (!i) { free(u->name); free(u); return NULL; }
-            create_instructor(data.instructor.salary, i);
+        case(INSTRUCTOR):;
+            create_instructor(data.instructor.salary, &(u->data.instructor));
             u->type = type;
-            u->data.instructor = *i;
-            free(i);
             break;
     }
     return u;
@@ -186,10 +181,13 @@ static int student_equal(const Student *student1, const Student *student2)
  */
 static int user_equal(const User *user1, const User *user2)
 {
-    if (user1->type != user2->type || strcmp(user1->name, user2->name) != 0) return 0;
+    if (!user1 && !user2) return 1;
+    else if (!user1 || !user2) return 0;
+    if (user1->name != user2->name) { if ((!user1->name || !user2->name) || strcmp(user1->name, user2->name) != 0) return 0; }
+    if (user1->type != user2->type) return 0;
     return user1->type == STUDENT ?
         student_equal(&(user1->data.student), &(user2->data.student)) :
-        user1->data.instructor.salary != user2->data.instructor.salary;
+        user1->data.instructor.salary == user2->data.instructor.salary;
 }
 
 /** create_list
@@ -247,7 +245,7 @@ int push_back(LinkedList *list, char *name, UserType type, UserUnion data)
     if (!list) return 1;
     if (list->size == 0) return push_front(list, name, type, data);
     Node * c = list->head;
-    while (!c->next) c = c->next;
+    while (c->next) c = c->next;
     Node * n = create_node(name, type, data);
     if (!n) return 1;
     ++list->size;
@@ -329,11 +327,15 @@ int get(LinkedList *list, int index, User **dataOut)
   */
 int contains(LinkedList *list, User *data, User **dataOut)
 {
-    UNUSED(list);
-    UNUSED(data);
-    UNUSED(dataOut);
-    UNUSED(user_equal);
-
+    if (!dataOut) return 0;
+    *dataOut = NULL;
+    if (!list || list->size == 0) return 0;
+    for (Node * n = list->head; n != NULL; n = n->next) {
+        if (user_equal(n->data, data)) {
+            *dataOut = n->data;
+            return 1;
+        }
+    }
     return 0;
 }
 
@@ -348,9 +350,12 @@ int contains(LinkedList *list, User *data, User **dataOut)
   */
 int pop_front(LinkedList *list, User **dataOut)
 {
-    UNUSED(list);
-    UNUSED(dataOut);
-
+    if (!list || list->size == 0 || !dataOut) return 1;
+    Node * n = list->head;
+    list->head = list->head->next;
+    *dataOut = n->data;
+    --list->size;
+    free(n);
     return 0;
 }
 
@@ -365,9 +370,15 @@ int pop_front(LinkedList *list, User **dataOut)
   */
 int pop_back(LinkedList *list, User **dataOut)
 {
-    UNUSED(list);
-    UNUSED(dataOut);
-
+    if (!list || list->size == 0 || !dataOut) return 1;
+    if (list->size == 1) return pop_front(list, dataOut);
+    Node * c = list->head;
+    while (c->next->next) c = c->next;
+    Node * n = c->next;
+    c->next = n->next;
+    *dataOut = n->data;
+    --list->size;
+    free(n);
     return 0;
 }
 
@@ -387,10 +398,16 @@ int pop_back(LinkedList *list, User **dataOut)
  */
 int remove_at_index(LinkedList *list, User **dataOut, int index)
 {
-    UNUSED(list);
-    UNUSED(index);
-    UNUSED(dataOut);
-
+    if (!list || index < 0 || index >= list->size || !dataOut) return 1;
+    if (index == 0) return pop_front(list, dataOut);
+    if (index == list->size - 1) return pop_back(list, dataOut);
+    Node * c = list->head;
+    for (int i = 0; i < index - 1; ++i) c = c->next;
+    Node * n = c ->next;
+    c->next = n->next;
+    *dataOut = n->data;
+    --list->size;
+    free(n);
     return 0;
 }
 
@@ -418,6 +435,18 @@ int remove_at_index(LinkedList *list, User **dataOut, int index)
 void empty_list(LinkedList *list)
 {
     UNUSED(list);
+    // if (!list || list->size == 0) return;
+    // User * n = list->head;
+    // while(list->size > 0) {
+    //     pop_front(list, &n);
+    //     free(n->data->name);
+    //     free(n->data);
+    //     free(n);
+    // }
+    // list->head = NULL;
+    // list->size = 0;
+    // return;
+
 }
 
 /** num_passing_all_classes
@@ -440,9 +469,17 @@ void empty_list(LinkedList *list)
  */
 int num_passing_all_classes(LinkedList *list, int *dataOut)
 {
-    UNUSED(list);
-    UNUSED(dataOut);
-
+    if (!list || list->size == 0) { *dataOut = -1; return 1; }
+    int c = 0;
+    for (Node * n = list->head; n != NULL; n = n->next) {
+        if (n->data->type == INSTRUCTOR) continue;
+        int np = 0;
+        for (int i = 0; i < n->data->data.student.num_classes; ++i) {
+            np += *(n->data->data.student.grades + i) >= 60.0 ? 1 : 0;
+        }
+        c += np == n->data->data.student.num_classes ? 1 : 0;
+    }
+    *dataOut = c;
     return 0;
 }
 
@@ -461,8 +498,14 @@ int num_passing_all_classes(LinkedList *list, int *dataOut)
  */
 int get_average_salary(LinkedList *list, double *dataOut)
 {
-    UNUSED(list);
-    UNUSED(dataOut);
-
+    if (!list || list->size == 0) { *dataOut = -1; return 1; }
+    double a = 0;
+    int i = 0;
+    for (Node * n = list->head; n != NULL; n = n->next) {
+        if (n->data->type == STUDENT) continue;
+        a += n->data->data.instructor.salary;
+        i++;
+    }
+    *dataOut = i > 0 ? a / i : a;
     return 0;
 }
