@@ -48,13 +48,30 @@ static int user_equal(const User *user1, const User *user2);
  */
 static User *create_user(char *name, UserType type, UserUnion data)
 {
-    UNUSED(name);
-    UNUSED(type);
-    UNUSED(data);
-    UNUSED(create_student);
-    UNUSED(create_instructor);
-
-    return NULL;
+    User * u = malloc(sizeof(struct user));
+    if (!u) return NULL;
+    u->name = malloc(strlen(name) + 1);
+    if (!u->name) { free(u); return NULL; }
+    strcpy(u->name, name);
+    switch(type) {
+        case(STUDENT): ;
+            Student * s = malloc(sizeof(struct student));
+            if (!s) { free(u->name); free(u); return NULL; }
+            if (create_student(data.student.num_classes, data.student.grades, s)) { free(s); free(u->name); free(u); return NULL; }
+            u->type = type;
+            u->data.student = *s;
+            free(s->grades); free(s);
+            break;
+        case(INSTRUCTOR): ;
+            Instructor * i = malloc(sizeof(struct instructor));
+            if (!i) { free(u->name); free(u); return NULL; }
+            create_instructor(data.instructor.salary, i);
+            u->type = type;
+            u->data.instructor = *i;
+            free(i);
+            break;
+    }
+    return u;
 }
 
 /** create_student
@@ -113,12 +130,13 @@ static int create_instructor(double salary, Instructor *dataOut)
   */
 static Node* create_node(char *name, UserType type, UserUnion data)
 {
-    UNUSED(name);
-    UNUSED(type);
-    UNUSED(data);
-    UNUSED(create_user);
-
-    return NULL;
+    Node * n = malloc(sizeof(struct node));
+    if (!n) return NULL;
+    User * u = create_user(name, type, data);
+    if (!u) { free(n); return NULL; }
+    n->next = NULL;
+    n->data = u;
+    return n;
 }
 
 /** student_equal
@@ -168,11 +186,10 @@ static int student_equal(const Student *student1, const Student *student2)
  */
 static int user_equal(const User *user1, const User *user2)
 {
-    UNUSED(user1);
-    UNUSED(user2);
-    UNUSED(student_equal);
-
-    return 0;
+    if (user1->type != user2->type || strcmp(user1->name, user2->name) != 0) return 0;
+    return user1->type == STUDENT ?
+        student_equal(&(user1->data.student), &(user2->data.student)) :
+        user1->data.instructor.salary != user2->data.instructor.salary;
 }
 
 /** create_list
@@ -186,7 +203,11 @@ static int user_equal(const User *user1, const User *user2)
  */
 LinkedList *create_list(void)
 {
-    return NULL;
+    LinkedList * ll = malloc(sizeof(struct linked_list));
+    if (!ll) return NULL;
+    ll->head = NULL;
+    ll->size = 0;
+    return ll;
 }
 
 /** push_front
@@ -200,12 +221,15 @@ LinkedList *create_list(void)
  */
 int push_front(LinkedList *list, char *name, UserType type, UserUnion data)
 {
-    UNUSED(list);
-    UNUSED(name);
-    UNUSED(type);
-    UNUSED(data);
-    UNUSED(create_node);
-
+    if (!list) return 1;
+    Node * n = create_node(name, type, data);
+    if (!n) return 1;
+    ++list->size;
+    if (list->size == 0) list->head = n;
+    else {
+        n->next = list->head;
+        list->head = n;
+    }
     return 0;
 }
 
@@ -220,12 +244,14 @@ int push_front(LinkedList *list, char *name, UserType type, UserUnion data)
  */
 int push_back(LinkedList *list, char *name, UserType type, UserUnion data)
 {
-    UNUSED(list);
-    UNUSED(name);
-    UNUSED(type);
-    UNUSED(data);
-    UNUSED(create_node);
-
+    if (!list) return 1;
+    if (list->size == 0) return push_front(list, name, type, data);
+    Node * c = list->head;
+    while (!c->next) c = c->next;
+    Node * n = create_node(name, type, data);
+    if (!n) return 1;
+    ++list->size;
+    c->next = n;
     return 0;
 }
 
@@ -248,13 +274,16 @@ int push_back(LinkedList *list, char *name, UserType type, UserUnion data)
  */
 int add_at_index(LinkedList *list, int index, char *name, UserType type, UserUnion data)
 {
-    UNUSED(list);
-    UNUSED(index);
-    UNUSED(name);
-    UNUSED(type);
-    UNUSED(data);
-    UNUSED(create_node);
-
+    if (!list || index < 0 || index > list->size) return 1;
+    if (index == 0) return push_front(list, name, type, data);
+    if (index == list->size) return push_back(list, name, type, data);
+    Node * c = list->head;
+    for (int i = 0; i < index - 1; ++i) c = c->next;
+    Node * n = create_node(name, type, data);
+    if (!n) return 1;
+    ++list->size;
+    n->next = c->next;
+    c->next = n;
     return 0;
 }
 
@@ -271,10 +300,10 @@ int add_at_index(LinkedList *list, int index, char *name, UserType type, UserUni
  */
 int get(LinkedList *list, int index, User **dataOut)
 {
-    UNUSED(list);
-    UNUSED(index);
-    UNUSED(dataOut);
-
+    if (!dataOut || !list || index < 0 || index >= list->size) return 1;
+    Node * c = list->head;
+    for (int i = 0; i < index; ++i) c = c->next;
+    *dataOut = c->data;
     return 0;
 }
 
