@@ -434,19 +434,20 @@ int remove_at_index(LinkedList *list, User **dataOut, int index)
  */
 void empty_list(LinkedList *list)
 {
-    UNUSED(list);
-    // if (!list || list->size == 0) return;
-    // User * n = list->head;
-    // while(list->size > 0) {
-    //     pop_front(list, &n);
-    //     free(n->data->name);
-    //     free(n->data);
-    //     free(n);
-    // }
-    // list->head = NULL;
-    // list->size = 0;
-    // return;
-
+    if (!list || list->size == 0) return;
+    Node * c = list->head;
+    Node * n;
+    while (c) {
+        n = c->next;
+        free(c->data->name);
+        if (c->data->type == STUDENT) { free(c->data->data.student.grades); }
+        free(c->data);
+        free(c);
+        c = n;
+    }
+    list->head = NULL;
+    list->size = 0;
+    return;
 }
 
 /** num_passing_all_classes
