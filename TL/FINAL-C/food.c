@@ -50,11 +50,40 @@ struct wrapper *head = NULL; // Head of the food list (a linked list)
  *         Otherwise, return SUCCESS
  */
 int makeWrapper(foodType foodType, int damage, const char *appleVariety, int health) {
-    UNUSED(foodType);
-    UNUSED(damage);
-    UNUSED(appleVariety);
-    UNUSED(health);
-    return FAILURE;
+    if (foodType == APPLE && !appleVariety) { return FAILURE; }
+    struct data * d = malloc(sizeof(struct data));
+    if (!d) return FAILURE;
+    union food * f = malloc(sizeof(union food));
+    if (!f) { free(d); return FAILURE; }
+    switch (foodType) {
+      case (APPLE):;
+        d->foodType = foodType;
+        f->apple.appleVariety = malloc(strlen(appleVariety) + 1);
+        if (!f->apple.appleVariety) { free(f); free(d); return FAILURE; }
+        strcpy(f->apple.appleVariety, appleVariety);
+        f->apple.damage = damage;
+        d->food = *f;
+        free(f);
+        break;
+      case (TOMATO):;
+        d->foodType = foodType;
+        f->tomato.health = health;
+        d->food = *f;
+        free(f);
+        break;
+    }
+    struct wrapper * w = malloc(sizeof(struct wrapper));
+    if (!w) { free(d); return FAILURE; }
+    w->data = *d;
+    free(d);
+    if (!head) {
+      head = w;
+      head->next = NULL;
+    } else {
+      w->next = head;
+      head = w;
+    }
+    return SUCCESS;
 }
 
 /** replaceAppleVariety
@@ -84,7 +113,18 @@ int makeWrapper(foodType foodType, int damage, const char *appleVariety, int hea
  *         Otherwise, return SUCCESS
  */
 int replaceAppleVariety(const char *replacementVariety, const char *targetVariety) {
-  UNUSED(replacementVariety);
-  UNUSED(targetVariety);
+  if (!replacementVariety || !targetVariety || !head) return FAILURE;
+  struct wrapper * c = head;
+  while (!c) {
+    if (c->data.foodType == APPLE && strcmp(c->data.food.apple.appleVariety, targetVariety) == 0) {
+      char * s = malloc(strlen(replacementVariety) + 1);
+      if (!s) return FAILURE;
+      free(c->data.food.apple.appleVariety);
+      c->data.food.apple.appleVariety = s;
+      strcpy(c->data.food.apple.appleVariety, replacementVariety);
+      return SUCCESS;
+    }
+    c = c->next;
+  }
   return FAILURE;
 }
